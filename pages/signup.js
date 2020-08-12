@@ -3,12 +3,13 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Layout from '../components/Layout';
 import authContext from '../context/auth/authContext';
+import Alert from '../components/Alert';
 
 const Signup = () => {
 
   // access to the state
   const AuthContext = useContext(authContext);
-  const { userAuthenticated, token } = AuthContext;
+  const { message, registryUser } = AuthContext;
 
   // form and validation with formik and yup
   const formik = useFormik({
@@ -23,7 +24,7 @@ const Signup = () => {
       password: Yup.string().required(`Password can't be empty`).min(6, 'Password must contain at least 6 characters')
     }),
     onSubmit: values => {
-      console.log(values);
+      registryUser(values);
     }
   });
 
@@ -31,6 +32,7 @@ const Signup = () => {
     <Layout>
       <div className="md:w-4/5 xl:w-3/5 mx-auto mb-32">
         <h2 className="text-4xl font-sans font-bold text-gray-800 text-center my-4">Sign Up</h2>
+        {message && <Alert />}
         <div className="flex justify-center mt-5">
           <div className="w-full max-w-lg">
             <form
