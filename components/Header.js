@@ -8,8 +8,8 @@ const Header = () => {
                 <img className="w-64 mb-8 md:mb-0" src="logo.svg" />
             </Link>
             <div>
-                <Link href="/signin">
-                    <a className="bg-red-500 px-5 py-3 rounded-lg text-white font-bold uppercase mr-2">Sign in</a>
+                <Link href="/login">
+                    <a className="bg-red-500 px-5 py-3 rounded-lg text-white font-bold uppercase mr-2">Log in</a>
                 </Link>
                 <Link href="/signup">
                     <a className="bg-black px-5 py-3 rounded-lg text-white font-bold uppercase">Sign up</a>
