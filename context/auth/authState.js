@@ -2,7 +2,13 @@ import React, { useReducer } from 'react';
 import authContext from './authContext';
 import authReducer from './authReducer';
 
-import { REGISTRY_SUCCESS, REGISTRY_ERROR, CLEAN_ALERT } from '../../types';
+import {
+    REGISTRY_SUCCESS,
+    REGISTRY_ERROR,
+    CLEAN_ALERT,
+    LOGIN_SUCCESS,
+    LOGIN_ERROR
+} from '../../types';
 
 import clientAxios from '../../config/axios';
 
@@ -10,7 +16,7 @@ const AuthState = ({ children }) => {
 
     // define initial state
     const initialState = {
-        token: '',
+        token: typeof window !== 'undefined' ? localStorage.getItem('rns_token') : '',
         authenticated: null,
         user: null,
         message: null
@@ -44,6 +50,29 @@ const AuthState = ({ children }) => {
         }, 3000);
     }
 
+    // authenticate users
+    const logIn = async data => {
+        try {
+            const response = await clientAxios.post('/api/auth', data);
+            dispatch({
+                type: LOGIN_SUCCESS,
+                payload: response.data.token
+            });
+        } catch (error) {
+            dispatch({
+                type: LOGIN_ERROR,
+                payload: error.response.data.msg
+            });
+        }
+
+        // clean the alert message after 3 seconds
+        setTimeout(() => {
+            dispatch({
+                type: CLEAN_ALERT
+            })
+        }, 3000);
+    }
+
     // authenticated user
     const userAuthenticated = name => {
         dispatch({
@@ -60,7 +89,8 @@ const AuthState = ({ children }) => {
                 user: state.user,
                 message: state.message,
                 registryUser,
-                userAuthenticated
+                userAuthenticated,
+                logIn
             }}
         >
             {children}
