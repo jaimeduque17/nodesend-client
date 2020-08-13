@@ -2,11 +2,11 @@ import React, { useReducer } from 'react';
 import authContext from './authContext';
 import authReducer from './authReducer';
 
-import { REGISTRY_SUCCESS } from '../../types';
+import { REGISTRY_SUCCESS, REGISTRY_ERROR, CLEAN_ALERT } from '../../types';
 
 import clientAxios from '../../config/axios';
 
-const AuthState = ({children}) => {
+const AuthState = ({ children }) => {
 
     // define initial state
     const initialState = {
@@ -27,10 +27,21 @@ const AuthState = ({children}) => {
             dispatch({
                 type: REGISTRY_SUCCESS,
                 payload: response.data.msg
-            })
+            });
+
         } catch (error) {
-            console.log(error);
+            dispatch({
+                type: REGISTRY_ERROR,
+                payload: error.response.data.msg
+            });
         }
+
+        // clean the alert message after 3 seconds
+        setTimeout(() => {
+            dispatch({
+                type: CLEAN_ALERT
+            })
+        }, 3000);
     }
 
     // authenticated user
@@ -41,7 +52,7 @@ const AuthState = ({children}) => {
         })
     }
 
-    return (  
+    return (
         <authContext.Provider
             value={{
                 token: state.token,
@@ -56,5 +67,5 @@ const AuthState = ({children}) => {
         </authContext.Provider>
     );
 }
- 
+
 export default AuthState;
