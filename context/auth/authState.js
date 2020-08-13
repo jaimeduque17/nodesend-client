@@ -7,10 +7,12 @@ import {
     REGISTRY_ERROR,
     CLEAN_ALERT,
     LOGIN_SUCCESS,
-    LOGIN_ERROR
+    LOGIN_ERROR,
+    AUTHENTICATED_USER
 } from '../../types';
 
 import clientAxios from '../../config/axios';
+import tokenAuth from '../../config/tokenAuth';
 
 const AuthState = ({ children }) => {
 
@@ -73,12 +75,22 @@ const AuthState = ({ children }) => {
         }, 3000);
     }
 
-    // authenticated user
-    const userAuthenticated = name => {
-        dispatch({
-            type: AUTHENTICATED_USER,
-            payload: name
-        })
+    // return authenticated user based on JWT
+    const userAuthenticated = async () => {
+        const token = localStorage.getItem('rns_token');
+        if(token) {
+            tokenAuth(token);
+        }
+
+        try {
+            const response = await clientAxios.get('/api/auth');
+            dispatch({
+                type: AUTHENTICATED_USER,
+                payload: response.data.user
+            })
+        } catch (error) {
+            
+        }
     }
 
     return (
@@ -89,8 +101,8 @@ const AuthState = ({ children }) => {
                 user: state.user,
                 message: state.message,
                 registryUser,
-                userAuthenticated,
-                logIn
+                logIn,
+                userAuthenticated
             }}
         >
             {children}

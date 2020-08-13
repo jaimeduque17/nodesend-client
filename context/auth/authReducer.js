@@ -3,7 +3,8 @@ import {
     REGISTRY_ERROR,
     CLEAN_ALERT,
     LOGIN_SUCCESS,
-    LOGIN_ERROR
+    LOGIN_ERROR,
+    AUTHENTICATED_USER
 } from '../../types';
 
 const authReducer = (state, action) => {
@@ -26,6 +27,11 @@ const authReducer = (state, action) => {
             return {
                 ...state,
                 message: null
+            }
+        case AUTHENTICATED_USER:
+            return {
+                ...state,
+                user: action.payload
             }
         default:
             return state;
