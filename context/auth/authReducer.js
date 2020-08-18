@@ -4,7 +4,8 @@ import {
     CLEAN_ALERT,
     LOGIN_SUCCESS,
     LOGIN_ERROR,
-    AUTHENTICATED_USER
+    AUTHENTICATED_USER,
+    LOGOUT
 } from '../../types';
 
 const authReducer = (state, action) => {
@@ -32,6 +33,14 @@ const authReducer = (state, action) => {
             return {
                 ...state,
                 user: action.payload
+            }
+        case LOGOUT:
+            localStorage.removeItem('rns_token');
+            return {
+                ...state,
+                user: null,
+                token: null,
+                authenticated: null
             }
         default:
             return state;

@@ -8,7 +8,8 @@ import {
     CLEAN_ALERT,
     LOGIN_SUCCESS,
     LOGIN_ERROR,
-    AUTHENTICATED_USER
+    AUTHENTICATED_USER,
+    LOGOUT
 } from '../../types';
 
 import clientAxios from '../../config/axios';
@@ -89,9 +90,20 @@ const AuthState = ({ children }) => {
                 payload: response.data.user
             })
         } catch (error) {
-            
+            dispatch({
+                type: LOGIN_ERROR,
+                payload: error.response.data.msg
+            });
         }
     }
+
+    // log out
+    const logOut = () => {
+        dispatch({
+            type: LOGOUT
+        });
+    }
+
 
     return (
         <authContext.Provider
@@ -102,7 +114,8 @@ const AuthState = ({ children }) => {
                 message: state.message,
                 registryUser,
                 logIn,
-                userAuthenticated
+                userAuthenticated,
+                logOut
             }}
         >
             {children}
